@@ -1,8 +1,9 @@
 ---
-title: 'Statistical Inference Course Project'
+title: "Statistical Inference Course Project"
 author: "Rui Mendes"
 date: "24-01-2015"
-output: html_document
+output: 
+    tufterhandout::html_tufte_handout
 ---
 
 ### Part1: "Simulation Exercises"
@@ -105,3 +106,5 @@ $\hat{\lambda}_{upp} = \hat{\lambda}(1 + \frac{1.96}{\sqrt{n}})$.
 As can be seen from the plot above, for selection of $\hat{\lambda}$ around 5,
 the average of the sample mean falls within the confidence interval at least 95% of the time.
 Note that the true rate, $\lambda$ is 5.
+
+This file can be found [here](https://github.com/rui-mendes/StatisticalInference/tree/master/Part1) and/or [here](http://rpubs.com/ruimendes/statistical-inference-proj-part1).
