@@ -1,0 +1,110 @@
+---
+title: "Statistical Inference Course Project"
+author: "Rui Mendes"
+date: "24-01-2015"
+output: html_document
+---
+
+### Part2: "Analyze the ToothGrowth data"
+
+
+This report was produced as part of the “Statistical Inference” course project by Coursera.
+This is the 2nd part of the project and the 1st part can be found [here](https://github.com/rui-mendes/StatisticalInference/tree/master/Part1).
+
+In this second part, we will perform basic inferential data analysis  using the ToothGrowth data.
+
+----
+
+### 1. Load the ToothGrowth data and perform some basic exploratory data analysis     
+  
+```{r explore, echo=TRUE}
+## Load the dataset
+library(datasets)
+data(ToothGrowth)
+
+## Check the first elements of the dataset
+head(ToothGrowth)
+
+## See a little description of the variables
+str(ToothGrowth)
+
+## Convert the field 'dose' from numeric to factor type
+ToothGrowth$dose <- as.factor(ToothGrowth$dose)
+
+## Review dataset variables after conversion
+str(ToothGrowth)
+
+## List the number of rows of dataset
+nrow(ToothGrowth)
+```  
+
+----
+
+### 2. Provide a basic summary of the data
+  
+```{r summary, echo=TRUE, fig.width=10}  
+## See the summary statistics for all variables
+summary(ToothGrowth)
+
+## Split cases between different dose levels and delivery methods
+table(ToothGrowth$dose, ToothGrowth$supp)
+
+## Import ggplot2 library
+library(ggplot2)
+
+## Create the graphic of ToothGrowth
+ggplot(data=ToothGrowth, aes(x=as.factor(dose), y=len, fill=supp)) +
+    geom_bar(stat="identity",) +
+    facet_grid(. ~ supp) +
+    xlab("Dose (in miligrams)") +
+    ylab("Tooth length") +
+    guides(fill=guide_legend(title="Supplement type")) +
+    scale_fill_brewer(palette="Set1")
+```  
+
+As can see above, there is a clear positive correlation between the **tooth length** and the **dose levels** of *Vitamin C*, for both delivery methods.    
+
+----
+
+### 3. Use confidence intervals and hypothesis tests to compare tooth growth by supp and dose  
+  
+95% confidence intervals for two variables and the intercept can be defined as follow:  
+
+```{r ci, echo=TRUE}
+fit <- lm(len ~ dose + supp, data=ToothGrowth)
+confint(fit)
+```  
+  
+The confidence intervals mean that if we collect a different set of data and estimate parameters of the linear model many times, 95% of the time, the coefficient estimations will be in these ranges. 
+
+For each coefficient (i.e. intercept, `dose` and `suppVC`), the **null hypothesis** is that the **coefficients are zero**, meaning that no tooth length variation is explained by that variable. 
+
+All _p_-values are less than 0.05, rejecting the null hypothesis and suggesting that each variable explains a significant portion  of variability in tooth length, assuming the significance level is 5%.  
+
+The effect of the dose can also be identified using regression analysis. One interesting question that can also be addressed is whether the supplement type (i.e. orange juice or ascorbic acid) has any effect on the tooth length.
+
+```{r}
+## Check the summary of fit variable
+summary(fit)
+```  
+
+  
+----
+
+### 4. Conclusions  
+
+The model explains 70% of the variance in the data. 
+
+The intercept is **`r fit$coefficients[[1]]`**, meaning that with no supplement of Vitamin C, the average tooth length is **`r fit$coefficients[[1]]`** units. 
+
+The coefficient of `dose` is **`r fit$coefficients[[2]]`**. It can be interpreted as increasing the delivered dose 1 mg, all else equal (i.e. no change in the supplement type), would increase the tooth length **`r fit$coefficients[[2]]`** units. 
+
+The last coefficient is for the supplement type. Since the supplement type is a categorical variable, dummy variables are used. 
+
+The computed coefficient is for `suppVC` and the value is **`r fit$coefficients[[3]]`** meaning that delivering a given dose as ascorbic acid, without changing the dose, would result in  **`r abs(fit$coefficients[[3]])`** units of decrease in the tooth length. 
+
+Since there are only two categories, we can also conclude that on average, delivering the dosage as orange juice would increase the tooth length by **`r abs(fit$coefficients[[3]])`** units.  
+
+---
+
+This file can be found [here](https://github.com/rui-mendes/StatisticalInference/tree/master/Part2).

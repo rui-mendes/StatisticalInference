@@ -2,8 +2,7 @@
 title: "Statistical Inference Course Project"
 author: "Rui Mendes"
 date: "24-01-2015"
-output: 
-    tufterhandout::html_tufte_handout
+output: html_document
 ---
 
 ### Part1: "Simulation Exercises"
